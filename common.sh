@@ -45,6 +45,23 @@ nodejs_setup(){
 
     dnf install nodejs -y   &>>$LOG_FILE
     VALIDATE $? "NodeJS installation"
+
+    npm install &>>$LOG_FILE
+    VALIDATE $? "npm install"
+}
+
+systemd_setup(){
+    cp $SCRIPT_DIR/$app_name.service /etc/systemd/system/$app_name.service
+    VALIDATE $? "Copying $app_name service"
+
+    systemctl daemon-reload &>>$LOG_FILE
+    VALIDATE $? "systemd daemon reload"
+
+    systemctl enable $app_name  &>>$LOG_FILE
+    VALIDATE $? "$app_name service enable"
+
+    systemctl start $app_name   &>>$LOG_FILE
+    VALIDATE $? "$app_name service start"
 }
 
 check_root(){

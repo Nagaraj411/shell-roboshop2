@@ -6,21 +6,21 @@ app_name=catalogue
 check_root
 nodejs_setup
 app_setup
+systemd_setup
 
-npm install &>>$LOG_FILE
-VALIDATE $? "npm install"
+systemd_setup(){
+    cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
+    VALIDATE $? "Copying catalogue service"
 
-cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
-VALIDATE $? "Copying catalogue service"
+    systemctl daemon-reload &>>$LOG_FILE
+    VALIDATE $? "systemd daemon reload"
 
-systemctl daemon-reload &>>$LOG_FILE
-VALIDATE $? "systemd daemon reload"
+    systemctl enable catalogue  &>>$LOG_FILE
+    VALIDATE $? "catalogue service enable"
 
-systemctl enable catalogue  &>>$LOG_FILE
-VALIDATE $? "catalogue service enable"
-
-systemctl start catalogue   &>>$LOG_FILE
-VALIDATE $? "catalogue service start"
+    systemctl start catalogue   &>>$LOG_FILE
+    VALIDATE $? "catalogue service start"
+}
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo 
 dnf install mongodb-mongosh -y  &>>$LOG_FILE    
