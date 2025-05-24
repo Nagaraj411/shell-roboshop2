@@ -60,13 +60,13 @@ maven_setup(){
     mv target/shipping-1.0.jar shipping.jar  &>>$LOG_FILE
     VALIDATE $? "Moving and renaming Jar file"
 }
-python_setup()
+python_setup(){
     dnf install python3 gcc python3-devel -y   &>>$LOG_FILE
     VALIDATE $? "Python3 installation"
 
     pip3 install -r requirements.txt &>>$LOG_FILE
     VALIDATE $? "Installing python dependencies"
-    
+
     cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service &>>$LOG_FILE
     VALIDATE $? "Copying payment.service file"
 }
