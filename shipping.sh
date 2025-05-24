@@ -3,7 +3,7 @@
 source ./common.sh
 app_name=shipping
 
-check_root
+check_root  #   RoboShop@1 password
 echo "Please enter root password to setup"
 read -s MYSQL_ROOT_PASSWORD
 
