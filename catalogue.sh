@@ -8,20 +8,6 @@ nodejs_setup
 app_setup
 systemd_setup
 
-systemd_setup(){
-    cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
-    VALIDATE $? "Copying catalogue service"
-
-    systemctl daemon-reload &>>$LOG_FILE
-    VALIDATE $? "systemd daemon reload"
-
-    systemctl enable catalogue  &>>$LOG_FILE
-    VALIDATE $? "catalogue service enable"
-
-    systemctl start catalogue   &>>$LOG_FILE
-    VALIDATE $? "catalogue service start"
-}
-
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo 
 dnf install mongodb-mongosh -y  &>>$LOG_FILE    
 VALIDATE $? "mongodb installation"
@@ -34,8 +20,5 @@ then
 else
     echo -e "Data is already loaded ... $Y SKIPPING $N"
 fi
-
-mongosh --host mongodb.devops84.shop
-VALIDATE $? "MongoDB connection"
 
 print_time
