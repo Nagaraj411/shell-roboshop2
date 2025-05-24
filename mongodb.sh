@@ -1,6 +1,9 @@
 #!/bin/bash
 
 source ./common.sh #source ./ common.sh means got to commaon.sh file to include the file in the current script
+app_name=mongodb
+
+check_root 
 
 cp mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
 VALIDATE $? "MongoDB repo file copy"
@@ -20,7 +23,4 @@ VALIDATE $? "MongoDB config file update"
 systemctl restart mongod &>>$LOG_FILE
 VALIDATE $? "MongoDB service restart"
 
-END_TIME=$(date +%s)
-TOTAL_TIME=$(( $END_TIME - $START_TIME ))
-
-echo -e "Script exection completed successfully, $Y time taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
+print_time  
