@@ -4,35 +4,39 @@ source ./common.sh
 check_root
 
 dnf module disable nginx -y &>>$LOG_FILE
-VALIDATE $? "Disabling Default Nginx"
+VALIDATE $? "Nginx module disable"
 
 dnf module enable nginx:1.24 -y &>>$LOG_FILE
-VALIDATE $? "Enabling Nginx:1.24"
+VALIDATE $? "Nginx module enable"
 
-dnf install nginx -y &>>$LOG_FILE
-VALIDATE $? "Installing Nginx"
+dnf install nginx -y    &>>$LOG_FILE
+VALIDATE $? "Nginx installation"
 
 systemctl enable nginx  &>>$LOG_FILE
-systemctl start nginx 
-VALIDATE $? "Starting Nginx"
+VALIDATE $? "Nginx service enable"
 
-rm -rf /usr/share/nginx/html/* &>>$LOG_FILE
-VALIDATE $? "Removing default content"
+systemctl start nginx  &>>$LOG_FILE
+VALIDATE $? "Nginx service start"
 
-curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOG_FILE
-VALIDATE $? "Downloading frontend"
+rm -rf /usr/share/nginx/html/*  &>>$LOG_FILE
+VALIDATE $? "Nginx default content removal"
+
+curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip   &>>$LOG_FILE
+VALIDATE $? "Downloading Frontend"
 
 cd /usr/share/nginx/html 
-unzip /tmp/frontend.zip &>>$LOG_FILE
-VALIDATE $? "unzipping frontend"
+VALIDATE $? "Nginx default content folder"
 
-rm -rf /etc/nginx/nginx.conf &>>$LOG_FILE
-VALIDATE $? "Remove default nginx conf"
+unzip /tmp/frontend.zip &>>$LOG_FILE
+VALIDATE $? "Unzipping Frontend"
+
+rm -rf /etc/nginx/nginx.conf   &>>$LOG_FILE
+VALIDATE $? "Removing default nginx.conf"
 
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
 VALIDATE $? "Copying nginx.conf"
 
-systemctl restart nginx 
-VALIDATE $? "Restarting nginx"
+systemctl restart nginx &>>$LOG_FILE
+VALIDATE $? "Nginx service restart"
 
 print_time
